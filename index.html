@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NDay Puppet Suite</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>NDay Puppet Suite</h1>
+        
+        <div class="input-section">
+            <div class="form-group">
+                <label for="puppetsList">Puppets List (one per line):</label>
+                <textarea id="puppetsList" placeholder="Enter nation names, one per line..."></textarea>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="mainNation">Your Main Nation:</label>
+                    <input type="text" id="mainNation" placeholder="Enter your main nation name">
+                </div>
+                <div class="form-group">
+                    <label for="sortingOrder">Sorting Order:</label>
+                    <select id="sortingOrder">
+                        <option value="MSCEU">Military, Strategic, Cleanup, Economic, Unknown</option>
+                        <option value="SCMEU">Strategic, Cleanup, Military, Economic, Unknown</option>
+                        <option value="CMSEU">Cleanup, Military, Strategic, Economic, Unknown</option>
+                        <option value="EMSCU">Economic, Military, Strategic, Cleanup, Unknown</option>
+                        <option value="UMSCE">Unknown, Military, Strategic, Cleanup, Economic</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <h3>Faction Configuration</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="enemyFactionId">Enemy Faction ID:</label>
+                        <input type="number" id="enemyFactionId" value="95" min="0" placeholder="Faction ID to target">
+                    </div>
+                    <div class="form-group">
+                        <label for="incomingFactionId">ID Faction to defend (my faction by default):</label>
+                        <input type="number" id="incomingFactionId" value="1" min="0" placeholder="Faction to defend">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="myFactionId">My Faction ID:</label>
+                    <input type="number" id="myFactionId" value="0" min="0" placeholder="Your faction ID">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Cache Management:</label>
+                <div class="file-input-group">
+                    <div class="file-input">
+                        <input type="file" id="cacheFile" accept=".csv" />
+                        <label for="cacheFile" class="file-input-label">Upload Cache CSV</label>
+                    </div>
+                    <button onclick="clearCache()">Clear Cache</button>
+                </div>
+                <div id="cacheInfo" class="cache-info hidden">
+                    <strong>Cache Status:</strong> <span id="cacheStatus">No cache loaded</span>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <button id="generateBtn" onclick="generateTable()">Generate Table</button>
+                <button id="clearBtn" onclick="clearAll()">Clear All</button>
+            </div>
+        </div>
+        
+        <div class="customisation-section">
+            <h2>Table Customisation</h2>
+            <div class="customisation-tabs">
+                <button class="tab-button active" onclick="switchTab('colors')">Colors</button>
+                <button class="tab-button" onclick="switchTab('layout')">Layout</button>
+                <button class="tab-button" onclick="switchTab('fonts')">Fonts</button>
+                <button class="tab-button" onclick="switchTab('effects')">Effects</button>
+            </div>
+            
+            <div id="colors-tab" class="tab-content active">
+                <h3>Color Scheme</h3>
+                <div class="preset-buttons">
+                    <button class="preset-btn active" onclick="applyPreset('default')">Default</button>
+                    <button class="preset-btn" onclick="applyPreset('dark')">Dark Theme</button>
+                    <button class="preset-btn" onclick="applyPreset('military')">Military</button>
+                    <button class="preset-btn" onclick="applyPreset('cyber')">Cyberpunk</button>
+                    <button class="preset-btn" onclick="applyPreset('elegant')">Elegant</button>
+                </div>
+                
+                <div class="color-picker-group">
+                    <div class="color-picker-item">
+                        <label>Background:</label>
+                        <input type="color" id="bgColor" value="#8B0000">
+                    </div>
+                    <div class="color-picker-item">
+                        <label>Border:</label>
+                        <input type="color" id="borderColor" value="#FFD700">
+                    </div>
+                    <div class="color-picker-item">
+                        <label>Header BG:</label>
+                        <input type="color" id="headerBgColor" value="#DAA520">
+                    </div>
+                    <div class="color-picker-item">
+                        <label>Header Text:</label>
+                        <input type="color" id="headerTextColor" value="#000000">
+                    </div>
+                    <div class="color-picker-item">
+                        <label>Row Hover:</label>
+                        <input type="color" id="hoverColor" value="#A00000">
+                    </div>
+                    <div class="color-picker-item">
+                        <label>Text Color:</label>
+                        <input type="color" id="textColor" value="#FFFFFF">
+                    </div>
+                </div>
+                
+                <h3>Specialty Colors</h3>
+                <div class="color-picker-group">
+                    <div class="color-picker-item">
+                        <label>Military:</label>
+                        <input type="color" id="militaryColor" value="#FF7D7D">
+                    </div>
+                    <div class="color-picker-item">
+                        <label>Strategic:</label>
+                        <input type="color" id="strategicColor" value="#7DA6FF">
+                    </div>
+                    <div class="color-picker-item">
+                        <label>Cleanup:</label>
+                        <input type="color" id="cleanupColor" value="#7DFFB2">
+                    </div>
+                    <div class="color-picker-item">
+                        <label>Economic:</label>
+                        <input type="color" id="economicColor" value="#FFE77D">
+                    </div>
+                    <div class="color-picker-item">
+                        <label>Unknown:</label>
+                        <input type="color" id="unknownColor" value="#CFCFCF">
+                    </div>
+                </div>
+            </div>
+            
+            <div id="layout-tab" class="tab-content">
+                <h3>Table Layout</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="tableWidth">Table Width (%):</label>
+                        <input type="range" id="tableWidth" min="50" max="100" value="80">
+                        <span id="tableWidthValue">80%</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="cellPadding">Cell Padding (px):</label>
+                        <input type="range" id="cellPadding" min="5" max="20" value="12">
+                        <span id="cellPaddingValue">12px</span>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="borderWidth">Border Width (px):</label>
+                        <input type="range" id="borderWidth" min="1" max="5" value="2">
+                        <span id="borderWidthValue">2px</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="borderRadius">Border Radius (px):</label>
+                        <input type="range" id="borderRadius" min="0" max="15" value="0">
+                        <span id="borderRadiusValue">0px</span>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="tableAlignment">Table Alignment:</label>
+                    <select id="tableAlignment">
+                        <option value="center">Center</option>
+                        <option value="left">Left</option>
+                        <option value="right">Right</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div id="fonts-tab" class="tab-content">
+                <h3>Typography</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="fontFamily">Font Family:</label>
+                        <select id="fontFamily">
+                            <option value="'Segoe UI', sans-serif">Segoe UI</option>
+                            <option value="Arial, sans-serif">Arial</option>
+                            <option value="'Times New Roman', serif">Times New Roman</option>
+                            <option value="'Courier New', monospace">Courier New</option>
+                            <option value="'Georgia', serif">Georgia</option>
+                            <option value="'Verdana', sans-serif">Verdana</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="fontSize">Font Size (px):</label>
+                        <input type="range" id="fontSize" min="10" max="20" value="14">
+                        <span id="fontSizeValue">14px</span>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="headerFontSize">Header Font Size (px):</label>
+                        <input type="range" id="headerFontSize" min="12" max="24" value="18">
+                        <span id="headerFontSizeValue">18px</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="fontWeight">Font Weight:</label>
+                        <select id="fontWeight">
+                            <option value="normal">Normal</option>
+                            <option value="bold">Bold</option>
+                            <option value="lighter">Lighter</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="effects-tab" class="tab-content">
+                <h3>Visual Effects</h3>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="enableHover" checked> Enable Row Hover Effect
+                    </label>
+                </div>
+                
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="enableStripes"> Enable Alternating Row Colors
+                    </label>
+                </div>
+                
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="enableShadows"> Enable Box Shadow
+                    </label>
+                </div>
+                
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="enableGradient"> Enable Gradient Background
+                    </label>
+                </div>
+                
+                <div class="form-group">
+                    <label for="opacity">Table Opacity:</label>
+                    <input type="range" id="opacity" min="0.5" max="1" step="0.1" value="1">
+                    <span id="opacityValue">100%</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="preview-section">
+            <h2>Live Preview</h2>
+            <div class="preview-table" id="previewContainer">
+                <p>Enter some nations and click "Generate Table" to see a preview of your customised table.</p>
+            </div>
+        </div>
+        
+        <div id="status" class="status hidden"></div>
+        
+        <div id="results" class="results hidden">
+            <h2>Generated Table</h2>
+            <div id="tableContainer"></div>
+            
+            <div class="download-section">
+                <h3>Download Files</h3>
+                <a id="downloadHtml" class="download-btn" download="nday_links.html">Download HTML</a>
+                <a id="downloadContainer" class="download-btn" download="containerise_container.txt">Download Container Rules</a>
+                <a id="downloadNation" class="download-btn" download="containerise_nation.txt">Download Nation Rules</a>
+                <a id="downloadCache" class="download-btn" download="cache.csv">Download Cache</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
