@@ -393,8 +393,9 @@ function hideStatus() {
 // Get nation specialty from API
 async function getNationSpecialty(nationName) {
     const url = `https://www.nationstates.net/cgi-bin/api.cgi?nation=${nationName}&q=nstats`;
+    const mainNation = document.getElementById('mainNation').value.trim() || 'Unknown';
     const headers = {
-        'User-Agent': 'NDayPuppetManager/1.0 (Web Version)'
+        'User-Agent': `NDayPuppetManager/1.0 (Used by ${mainNation})`
     };
     
     try {
