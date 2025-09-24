@@ -12,9 +12,9 @@ const CONFIG = {
     
     //Default values, user can customise them in the UI
     factionIds: {
-        enemyFactionId: 0,        // Target faction (enemy)
+        enemyFactionId: 5,        // Target faction (enemy)
         incomingFactionId: 1,      // Faction to defend (incoming)
-        myFactionId: 0             // My faction (join)
+        myFactionId: 1             // My faction (join)
     },
     
     // API settings
