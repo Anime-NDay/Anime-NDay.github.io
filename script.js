@@ -303,6 +303,93 @@ function updateRangeValues() {
     document.getElementById('fontSizeValue').textContent = document.getElementById('fontSize').value + 'px';
     document.getElementById('headerFontSizeValue').textContent = document.getElementById('headerFontSize').value + 'px';
     document.getElementById('opacityValue').textContent = Math.round(document.getElementById('opacity').value * 100) + '%';
+    updateSortingOrderDisplay();
+}
+
+// Update sorting order display
+function updateSortingOrderDisplay() {
+    const items = document.querySelectorAll('.sorting-item');
+    const display = document.getElementById('sortingOrderValue');
+    
+    // Update numbers based on current position
+    items.forEach((item, index) => {
+        const numberSpan = item.querySelector('.sorting-number');
+        if (numberSpan) {
+            numberSpan.textContent = index + 1;
+        }
+    });
+    
+    // Update display text
+    const order = Array.from(items).map(item => {
+        const textSpan = item.querySelector('.sorting-text');
+        return textSpan ? textSpan.textContent : item.textContent;
+    }).join(', ');
+    display.textContent = order;
+}
+
+// Get sorting order value from draggable items
+function getSortingOrderValue() {
+    const items = document.querySelectorAll('.sorting-item');
+    return Array.from(items).map(item => item.getAttribute('data-specialty')).join('');
+}
+
+// Initialize drag and drop for sorting items
+function initializeSortingSlider() {
+    const slider = document.getElementById('sortingSlider');
+    const items = document.querySelectorAll('.sorting-item');
+    
+    items.forEach(item => {
+        item.addEventListener('dragstart', handleDragStart);
+        item.addEventListener('dragend', handleDragEnd);
+        item.addEventListener('dragover', handleDragOver);
+        item.addEventListener('drop', handleDrop);
+        item.addEventListener('dragenter', handleDragEnter);
+        item.addEventListener('dragleave', handleDragLeave);
+    });
+}
+
+// Drag and drop event handlers
+function handleDragStart(e) {
+    e.target.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/html', e.target.outerHTML);
+}
+
+function handleDragEnd(e) {
+    e.target.classList.remove('dragging');
+    // Remove all drag-over classes
+    document.querySelectorAll('.sorting-item').forEach(item => {
+        item.classList.remove('drag-over');
+    });
+}
+
+function handleDragOver(e) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+}
+
+function handleDragEnter(e) {
+    e.preventDefault();
+    if (e.target.classList.contains('sorting-item')) {
+        e.target.classList.add('drag-over');
+    }
+}
+
+function handleDragLeave(e) {
+    e.target.classList.remove('drag-over');
+}
+
+function handleDrop(e) {
+    e.preventDefault();
+    e.target.classList.remove('drag-over');
+    
+    const draggedItem = document.querySelector('.dragging');
+    if (draggedItem && e.target.classList.contains('sorting-item') && draggedItem !== e.target) {
+        // Insert the dragged item before the target
+        e.target.parentNode.insertBefore(draggedItem, e.target);
+        updateSortingOrderDisplay();
+        updatePreview();
+    }
 }
 
 // Load cache from localStorage
@@ -428,7 +515,7 @@ async function getNationSpecialty(nationName) {
 async function generateTable() {
     const puppetsList = document.getElementById('puppetsList').value.trim();
     const mainNation = document.getElementById('mainNation').value.trim();
-    const sortingOrder = document.getElementById('sortingOrder').value;
+    const sortingOrder = getSortingOrderValue();
     
     if (!puppetsList) {
         showStatus('Please enter at least one nation name.', 'error');
@@ -817,6 +904,9 @@ document.addEventListener('DOMContentLoaded', function() {
             element.addEventListener('input', updateRangeValues);
         }
     });
+    
+    // Initialize sorting slider
+    initializeSortingSlider();
     
     // Initialize
     loadCache();

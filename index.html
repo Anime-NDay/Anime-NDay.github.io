@@ -23,13 +23,31 @@
                 </div>
                 <div class="form-group">
                     <label for="sortingOrder">Sorting Order:</label>
-                    <select id="sortingOrder">
-                        <option value="MSCEU">Military, Strategic, Cleanup, Economic, Unknown</option>
-                        <option value="SCMEU">Strategic, Cleanup, Military, Economic, Unknown</option>
-                        <option value="CMSEU">Cleanup, Military, Strategic, Economic, Unknown</option>
-                        <option value="EMSCU">Economic, Military, Strategic, Cleanup, Unknown</option>
-                        <option value="UMSCE">Unknown, Military, Strategic, Cleanup, Economic</option>
-                    </select>
+                    <div class="sorting-slider-container">
+                        <div class="sorting-slider" id="sortingSlider">
+                            <div class="sorting-item" data-specialty="M" draggable="true">
+                                <span class="sorting-number">1</span>
+                                <span class="sorting-text">Military</span>
+                            </div>
+                            <div class="sorting-item" data-specialty="S" draggable="true">
+                                <span class="sorting-number">2</span>
+                                <span class="sorting-text">Strategic</span>
+                            </div>
+                            <div class="sorting-item" data-specialty="C" draggable="true">
+                                <span class="sorting-number">3</span>
+                                <span class="sorting-text">Cleanup</span>
+                            </div>
+                            <div class="sorting-item" data-specialty="E" draggable="true">
+                                <span class="sorting-number">4</span>
+                                <span class="sorting-text">Economic</span>
+                            </div>
+                            <div class="sorting-item" data-specialty="U" draggable="true">
+                                <span class="sorting-number">5</span>
+                                <span class="sorting-text">Unknown</span>
+                            </div>
+                        </div>
+                        <div id="sortingOrderValue" class="sorting-display">Military, Strategic, Cleanup, Economic, Unknown</div>
+                    </div>
                 </div>
             </div>
             
